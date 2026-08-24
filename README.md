@@ -77,7 +77,8 @@ wails build -platform windows/amd64 -clean
 # 产物：build\bin\pennypick.exe
 ```
 
-> 注意：构建前请确认没有正在运行的 `pennypick.exe`（文件被占用会导致静默构建失败）。
+> 注意：构建前请确认没有正在运行的 `pennypick.exe`（文件被占用会导致静默构建失败）。  
+> 如需修改应用图标：替换"build/appicon.png"，并执行"wails generate icons --input appicon.png   --windowsfilename windows/icons.ico    --macfilename darwin/icons.icns" 
 
 ## 数据存储
 
