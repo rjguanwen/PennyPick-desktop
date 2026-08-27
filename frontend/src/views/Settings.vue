@@ -44,6 +44,27 @@
       </div>
     </div>
 
+    <!-- 明文数据库导出（迁移，仅管理员可见） -->
+    <div v-if="isAdmin" class="pp-card">
+      <div class="card-title"><el-icon><Files /></el-icon> 明文数据库导出</div>
+      <div class="export-form">
+        <p class="db-export-tip">
+          导出<b>未加密</b>的完整数据库文件，用于把账本迁移到其他电脑。文件包含全部用户与账本数据，请务必妥善保管。
+        </p>
+        <el-button type="warning" :icon="Files" :loading="exportingDB" @click="doExportPlainDB">
+          导出明文数据库
+        </el-button>
+        <div v-if="exportedDBPath" class="db-export-result">
+          <div class="db-export-item">已导出：<code>{{ exportedDBPath }}</code></div>
+          <div class="db-export-item">
+            迁移步骤：在新电脑上，将导出的文件重命名为 <code>pennypick.db</code> 放到
+            <code>%APPDATA%\PennyPick\</code> 目录下，首次启动应用并设置数据库密码即可完成导入（文件会被自动加密保存）。
+          </div>
+          <div class="db-export-item warn">明文文件含全部账本数据，导出完成后请妥善保存或及时删除。</div>
+        </div>
+      </div>
+    </div>
+
     <!-- 标签管理 -->
     <div class="pp-card">
       <div class="card-title"><el-icon><CollectionTag /></el-icon> 标签管理</div>
@@ -85,11 +106,21 @@
         <div class="about-logo">💰</div>
         <div class="about-name">拾财 PennyPick</div>
         <div class="about-desc">个人记账应用：轻松记下每一笔消费，多维度统计分析，科学规划预算，帮你管好每一分钱。</div>
-        <div class="about-item"><span>版本</span><b>1.0.1</b></div>
+        <div class="about-item"><span>版本</span><b>1.1.0</b></div>
         <div class="about-item"><span>开发者</span><b>关文</b></div>
         <div class="about-item"><span>邮箱</span><b>rjguanwen001@163.com</b></div>
-        <div class="about-item"><span>发布时间</span><b>2026-08-25</b></div>
+        <div class="about-item"><span>发布时间</span><b>2026-08-27</b></div>
         <div class="about-item"><span>技术栈</span><b>Vue 3 · Element Plus · Go</b></div>
+      </div>
+    </div>
+
+    <!-- 赞助支持 -->
+    <div class="pp-card">
+      <div class="card-title"><el-icon><Coffee /></el-icon> 赞助支持</div>
+      <div class="donate">
+        <p class="donate-tip">拾财完全免费使用。如果您觉得它好用，欢迎自愿扫码请开发者喝杯咖啡——付多少、付不付，都不影响任何功能的使用。</p>
+        <img :src="donateImg" class="donate-qr" alt="微信收款码" />
+        <p class="donate-note">微信扫码支付</p>
       </div>
     </div>
   </div>
@@ -98,7 +129,8 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { CollectionTag, Download, Plus, Lock, InfoFilled } from '@element-plus/icons-vue'
+import { CollectionTag, Download, Plus, Lock, InfoFilled, Files, Coffee } from '@element-plus/icons-vue'
+import donateImg from '../assets/skzh.png'
 import { authApi, exportApi, tagApi } from '../api'
 import { useAuthStore } from '../stores/auth'
 import { nowDate } from '../utils/format'
@@ -109,6 +141,9 @@ const auth = useAuthStore()
 
 const avatarText = computed(() => (auth.user?.nickname || auth.user?.username || '?').charAt(0))
 
+// 明文数据库导出仅管理员可用（后端还会做二次校验）
+const isAdmin = computed(() => auth.user?.username === 'admin')
+
 const tags = ref([])
 const newTag = ref('')
 
@@ -116,6 +151,9 @@ const exportRange = ref([])
 const exportType = ref('')
 const exportFormat = ref('csv')
 const exporting = ref(false)
+
+const exportingDB = ref(false)
+const exportedDBPath = ref('')
 
 const pwd = reactive({ old_password: '', new_password: '', confirm: '' })
 const pwdSaving = ref(false)
@@ -186,6 +224,30 @@ async function doExport() {
     ElMessage.error(e?.message || '导出失败')
   } finally {
     exporting.value = false
+  }
+}
+
+async function doExportPlainDB() {
+  exportingDB.value = true
+  exportedDBPath.value = ''
+  try {
+    const app = window.go && window.go.main && window.go.main.App
+    if (!app || typeof app.ExportPlainDB !== 'function') {
+      ElMessage.error('当前环境不支持明文数据库导出')
+      return
+    }
+    const token = localStorage.getItem('token') || ''
+    const saved = await app.ExportPlainDB(token)
+    if (saved) {
+      exportedDBPath.value = saved
+      ElMessage.success('明文数据库已导出')
+    } else {
+      ElMessage.info('已取消导出')
+    }
+  } catch (e) {
+    ElMessage.error(e?.message || '导出失败')
+  } finally {
+    exportingDB.value = false
   }
 }
 
@@ -331,5 +393,53 @@ onMounted(async () => {
 }
 .about-item b {
   color: #303133;
+}
+.donate {
+  text-align: center;
+}
+.donate-tip {
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.7;
+  margin: 0 0 14px;
+  text-align: left;
+}
+.donate-qr {
+  width: 200px;
+  height: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(31, 45, 61, 0.1);
+}
+.donate-note {
+  font-size: 12px;
+  color: #c0c4cc;
+  margin-top: 8px;
+}
+.db-export-tip {
+  font-size: 13px;
+  color: #909399;
+  line-height: 1.7;
+  margin: 0;
+}
+.db-export-result {
+  background: #f7f8fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.db-export-item {
+  line-height: 1.8;
+  color: #606266;
+}
+.db-export-item code {
+  background: #eef0f3;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 12px;
+  word-break: break-all;
+}
+.db-export-item.warn {
+  color: #e6a23c;
+  margin-top: 4px;
 }
 </style>

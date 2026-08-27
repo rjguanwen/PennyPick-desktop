@@ -2,14 +2,14 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import router from '../router'
 
-// 桌面版由 Wails 在启动时注入 __PENNYPICK_API_BASE__；Web 开发模式回退到 /api
-const baseURL = window.__PENNYPICK_API_BASE__ || '/api'
+// 桌面版 API 基础地址由解锁成功后注入 __PENNYPICK_API_BASE__（Wails 绑定获取）；
+// 需在请求时动态读取，因为解锁发生在模块加载之后。Web 开发模式回退到 /api。
 const api = axios.create({
-  baseURL,
   timeout: 20000,
 })
 
 api.interceptors.request.use((config) => {
+  config.baseURL = window.__PENNYPICK_API_BASE__ || '/api'
   const token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
@@ -21,14 +21,17 @@ api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const status = error.response?.status
-    const detail = error.response?.data?.detail
     if (status === 401) {
+      // 未登录/凭证过期：清登录态并跳转登录页属预期行为，静默处理，不弹错误提示
+      // （桌面版每次启动都会强制重新登录，避免解锁瞬间残留请求弹出“凭证已过期”）
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       if (router.currentRoute.value.path !== '/login') {
         router.push('/login')
       }
+      return Promise.reject(error)
     }
+    const detail = error.response?.data?.detail
     const msg = typeof detail === 'string' ? detail : error.message || '请求失败'
     ElMessage.error(msg)
     return Promise.reject(error)

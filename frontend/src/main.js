@@ -27,13 +27,14 @@ app.use(createPinia())
 app.use(router)
 app.use(ElementPlus, { locale: zhCn })
 
-// 桌面版：先从 Wails 绑定获取本地 API 地址，再挂载应用
+// 桌面版：先查询数据库状态（决定是否显示解锁界面），再挂载应用。
+// API 基础地址在解锁成功后由 App.vue 注入 __PENNYPICK_API_BASE__。
 async function bootstrap() {
-  if (window.go && window.go.main && window.go.main.App && typeof window.go.main.App.GetAPIBaseURL === 'function') {
+  if (window.go && window.go.main && window.go.main.App && typeof window.go.main.App.GetDatabaseStatus === 'function') {
     try {
-      window.__PENNYPICK_API_BASE__ = await window.go.main.App.GetAPIBaseURL()
+      window.__PENNYPICK_DB_STATUS__ = await window.go.main.App.GetDatabaseStatus()
     } catch (e) {
-      console.error('[PennyPick] 获取 API 地址失败', e)
+      console.error('[PennyPick] 查询数据库状态失败', e)
     }
   }
   app.mount('#app')

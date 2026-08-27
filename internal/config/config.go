@@ -13,6 +13,7 @@ type Config struct {
 	Port        string
 	SecretKey   string
 	DatabaseURL string
+	DatabasePass string // 数据库主密码（桌面版由解锁界面传入）
 
 	AdminUsername string
 	AdminPassword string
