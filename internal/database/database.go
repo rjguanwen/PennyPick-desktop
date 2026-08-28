@@ -327,6 +327,7 @@ func Migrate(db *gorm.DB) error {
 		&model.Repayment{},
 		&model.RecurringBill{},
 		&model.MonthlyReport{},
+		&model.YearlyReport{},
 		&model.BillImport{},
 		&model.BillImportItem{},
 	); err != nil {
