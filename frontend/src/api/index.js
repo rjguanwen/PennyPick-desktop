@@ -22,12 +22,18 @@ api.interceptors.response.use(
   (error) => {
     const status = error.response?.status
     if (status === 401) {
-      // 未登录/凭证过期：清登录态并跳转登录页属预期行为，静默处理，不弹错误提示
-      // （桌面版每次启动都会强制重新登录，避免解锁瞬间残留请求弹出“凭证已过期”）
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      if (router.currentRoute.value.path !== '/login') {
-        router.push('/login')
+      const url = error.config?.url || ''
+      // 登录接口失败（用户名/密码错误）必须提示；其余 401 属预期行为
+      // （未登录/凭证过期，桌面版每次启动都会强制重新登录），静默处理不弹错误提示
+      if (url.includes('/auth/login')) {
+        const detail = error.response?.data?.detail
+        ElMessage.error(typeof detail === 'string' ? detail : '用户名或密码错误')
+      } else {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        if (router.currentRoute.value.path !== '/login') {
+          router.push('/login')
+        }
       }
       return Promise.reject(error)
     }
