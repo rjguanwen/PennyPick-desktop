@@ -44,27 +44,6 @@
       </div>
     </div>
 
-    <!-- 明文数据库导出（迁移，仅管理员可见） -->
-    <div v-if="isAdmin" class="pp-card">
-      <div class="card-title"><el-icon><Files /></el-icon> 明文数据库导出</div>
-      <div class="export-form">
-        <p class="db-export-tip">
-          导出<b>未加密</b>的完整数据库文件，用于把账本迁移到其他电脑。文件包含全部用户与账本数据，请务必妥善保管。
-        </p>
-        <el-button type="warning" :icon="Files" :loading="exportingDB" @click="doExportPlainDB">
-          导出明文数据库
-        </el-button>
-        <div v-if="exportedDBPath" class="db-export-result">
-          <div class="db-export-item">已导出：<code>{{ exportedDBPath }}</code></div>
-          <div class="db-export-item">
-            迁移步骤：在新电脑上，将导出的文件重命名为 <code>pennypick.db</code> 放到
-            <code>%APPDATA%\PennyPick\</code> 目录下，首次启动应用并设置数据库密码即可完成导入（文件会被自动加密保存）。
-          </div>
-          <div class="db-export-item warn">明文文件含全部账本数据，导出完成后请妥善保存或及时删除。</div>
-        </div>
-      </div>
-    </div>
-
     <!-- 标签管理 -->
     <div class="pp-card">
       <div class="card-title"><el-icon><CollectionTag /></el-icon> 标签管理</div>
@@ -114,6 +93,19 @@
       </div>
     </div>
 
+    <!-- 操作日志（仅管理员） -->
+    <div v-if="isAdmin" class="pp-card">
+      <div class="card-title"><el-icon><Tickets /></el-icon> 操作日志</div>
+      <div class="oplog-form">
+        <p class="oplog-tip">开启后将记录登录、记账、修改、删除等重要操作，便于排查问题。因日志数据量较大，默认关闭。</p>
+        <div class="oplog-row">
+          <span class="oplog-label">记录操作日志</span>
+          <el-switch v-model="opLogEnabled" :loading="opLogSaving" @change="onOpLogChange" />
+        </div>
+        <el-button type="primary" plain :icon="Tickets" @click="router.push('/oplogs')">查看操作日志</el-button>
+      </div>
+    </div>
+
     <!-- 赞助支持 -->
     <div class="pp-card">
       <div class="card-title"><el-icon><Coffee /></el-icon> 赞助支持</div>
@@ -129,9 +121,9 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { CollectionTag, Download, Plus, Lock, InfoFilled, Files, Coffee } from '@element-plus/icons-vue'
+import { CollectionTag, Download, Plus, Lock, InfoFilled, Coffee, Tickets } from '@element-plus/icons-vue'
 import donateImg from '../assets/skzh.png'
-import { authApi, exportApi, tagApi } from '../api'
+import { authApi, exportApi, tagApi, oplogApi } from '../api'
 import { useAuthStore } from '../stores/auth'
 import { nowDate } from '../utils/format'
 import { useRouter } from 'vue-router'
@@ -141,9 +133,6 @@ const auth = useAuthStore()
 
 const avatarText = computed(() => (auth.user?.nickname || auth.user?.username || '?').charAt(0))
 
-// 明文数据库导出仅管理员可用（后端还会做二次校验）
-const isAdmin = computed(() => auth.user?.username === 'admin')
-
 const tags = ref([])
 const newTag = ref('')
 
@@ -152,11 +141,38 @@ const exportType = ref('')
 const exportFormat = ref('csv')
 const exporting = ref(false)
 
-const exportingDB = ref(false)
-const exportedDBPath = ref('')
-
 const pwd = reactive({ old_password: '', new_password: '', confirm: '' })
 const pwdSaving = ref(false)
+
+// 操作日志（仅管理员）
+const isAdmin = computed(() => auth.user?.username === 'admin')
+const opLogEnabled = ref(false)
+const opLogSaving = ref(false)
+
+async function onOpLogChange(val) {
+  if (val) {
+    // 显式提醒开启后数据量会大大增加
+    try {
+      await ElMessageBox.confirm(
+        '开启操作日志后，应用将记录所有重要操作（登录、记账、修改、删除等），日志数据量会大大增加。确认开启吗？',
+        '开启操作日志',
+        { type: 'warning', confirmButtonText: '确认开启' },
+      )
+    } catch (e) {
+      opLogEnabled.value = false // 用户取消
+      return
+    }
+  }
+  opLogSaving.value = true
+  try {
+    await oplogApi.setEnabled(val)
+    ElMessage.success(val ? '操作日志已开启' : '操作日志已关闭')
+  } catch (e) {
+    opLogEnabled.value = !val
+  } finally {
+    opLogSaving.value = false
+  }
+}
 
 async function loadTags() {
   tags.value = (await tagApi.list()) || []
@@ -191,24 +207,12 @@ async function removeTag(tag) {
 
 async function doExport() {
   const params = {
-    start: exportRange.value?.[0] || '',
-    end: exportRange.value?.[1] || '',
-    type: exportType.value || '',
+    start: exportRange.value?.[0] || undefined,
+    end: exportRange.value?.[1] || undefined,
+    type: exportType.value || undefined,
   }
   exporting.value = true
   try {
-    // 桌面版：调用 Wails 绑定，弹出系统保存对话框
-    if (window.go && window.go.main && window.go.main.App && typeof window.go.main.App.ExportBills === 'function') {
-      const token = localStorage.getItem('token') || ''
-      const saved = await window.go.main.App.ExportBills(params.start, params.end, params.type, token)
-      if (saved) {
-        ElMessage.success(`已导出：${saved}`)
-      } else {
-        ElMessage.info('已取消导出')
-      }
-      return
-    }
-    // Web 版回退：Blob 下载
     const blob = await exportApi.download(params)
     const filename = `pennypick_bills_${exportRange.value?.[0] || 'all'}_${exportRange.value?.[1] || 'now'}.csv`
     const url = URL.createObjectURL(blob)
@@ -221,33 +225,9 @@ async function doExport() {
     URL.revokeObjectURL(url)
     ElMessage.success('导出成功')
   } catch (e) {
-    ElMessage.error(e?.message || '导出失败')
+    ElMessage.error('导出失败')
   } finally {
     exporting.value = false
-  }
-}
-
-async function doExportPlainDB() {
-  exportingDB.value = true
-  exportedDBPath.value = ''
-  try {
-    const app = window.go && window.go.main && window.go.main.App
-    if (!app || typeof app.ExportPlainDB !== 'function') {
-      ElMessage.error('当前环境不支持明文数据库导出')
-      return
-    }
-    const token = localStorage.getItem('token') || ''
-    const saved = await app.ExportPlainDB(token)
-    if (saved) {
-      exportedDBPath.value = saved
-      ElMessage.success('明文数据库已导出')
-    } else {
-      ElMessage.info('已取消导出')
-    }
-  } catch (e) {
-    ElMessage.error(e?.message || '导出失败')
-  } finally {
-    exportingDB.value = false
   }
 }
 
@@ -277,6 +257,14 @@ async function changePassword() {
 
 onMounted(async () => {
   loadTags()
+  if (isAdmin.value) {
+    try {
+      const s = await oplogApi.setting()
+      opLogEnabled.value = !!s.enabled
+    } catch (e) {
+      // 忽略：开关保持默认关闭
+    }
+  }
   const end = new Date()
   const start = new Date()
   start.setMonth(start.getMonth() - 1)
@@ -415,31 +403,20 @@ onMounted(async () => {
   color: #c0c4cc;
   margin-top: 8px;
 }
-.db-export-tip {
+.oplog-tip {
   font-size: 13px;
   color: #909399;
   line-height: 1.7;
-  margin: 0;
+  margin: 0 0 12px;
 }
-.db-export-result {
-  background: #f7f8fa;
-  border-radius: 6px;
-  padding: 10px 12px;
-  font-size: 13px;
+.oplog-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
-.db-export-item {
-  line-height: 1.8;
-  color: #606266;
-}
-.db-export-item code {
-  background: #eef0f3;
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-size: 12px;
-  word-break: break-all;
-}
-.db-export-item.warn {
-  color: #e6a23c;
-  margin-top: 4px;
+.oplog-label {
+  font-size: 14px;
+  color: #303133;
 }
 </style>
