@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="300" viewBox="0 0 780 300" font-family="'Segoe UI','Microsoft YaHei','PingFang SC',sans-serif">
+  <rect width="780" height="300" fill="#f4f6fa" rx="18"/>
+  <text x="390" y="44" text-anchor="middle" font-size="21" font-weight="700" fill="#303133">你的账本，只属于你</text>
+  <text x="390" y="68" text-anchor="middle" font-size="13" fill="#909399">永不联网，不注册云账号，数据始终在自己手里</text>
+
+  <!-- card 1 -->
+  <rect x="30" y="112" width="200" height="150" rx="14" fill="#ffffff"/>
+  <text x="130" y="168" text-anchor="middle" font-size="30">🖥️</text>
+  <text x="130" y="210" text-anchor="middle" font-size="15" font-weight="700" fill="#303133">只在你电脑里</text>
+  <text x="130" y="236" text-anchor="middle" font-size="12" fill="#909399">不上传任何服务器</text>
+
+  <!-- arrow 1 -->
+  <line x1="242" y1="187" x2="276" y2="187" stroke="#c0c4cc" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="276,187 266,181 266,193" fill="#c0c4cc"/>
+
+  <!-- card 2 -->
+  <rect x="290" y="112" width="200" height="150" rx="14" fill="#ffffff"/>
+  <text x="390" y="168" text-anchor="middle" font-size="30">🔒</text>
+  <text x="390" y="210" text-anchor="middle" font-size="15" font-weight="700" fill="#303133">整库加密</text>
+  <text x="390" y="236" text-anchor="middle" font-size="12" fill="#909399">文件被拷走也读不懂</text>
+
+  <!-- arrow 2 -->
+  <line x1="502" y1="187" x2="536" y2="187" stroke="#c0c4cc" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="536,187 526,181 526,193" fill="#c0c4cc"/>
+
+  <!-- card 3 -->
+  <rect x="550" y="112" width="200" height="150" rx="14" fill="#ffffff"/>
+  <text x="650" y="168" text-anchor="middle" font-size="30">🚫</text>
+  <text x="650" y="210" text-anchor="middle" font-size="15" font-weight="700" fill="#303133">永不联网</text>
+  <text x="650" y="236" text-anchor="middle" font-size="12" fill="#909399">应用不做任何联网操作</text>
+</svg>

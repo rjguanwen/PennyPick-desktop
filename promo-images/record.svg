@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="430" viewBox="0 0 580 430" font-family="'Segoe UI','Microsoft YaHei','PingFang SC',sans-serif">
+  <rect width="580" height="430" fill="#f4f6fa" rx="18"/>
+
+  <!-- window frame -->
+  <rect x="16" y="16" width="548" height="398" rx="12" fill="#ffffff" stroke="#e4e7ed" stroke-width="1"/>
+
+  <!-- title -->
+  <text x="42" y="56" font-size="16" font-weight="700" fill="#303133">记一笔</text>
+  <circle cx="536" cy="46" r="6" fill="#f56c6c"/>
+  <circle cx="518" cy="46" r="6" fill="#e6a23c"/>
+  <circle cx="500" cy="46" r="6" fill="#67c23a"/>
+
+  <!-- left panel -->
+  <rect x="30" y="76" width="242" height="322" rx="12" fill="#fafbfd" stroke="#ebeef5"/>
+  <text x="52" y="126" font-size="13" fill="#909399">金额</text>
+  <text x="52" y="168" font-size="30" font-weight="700" fill="#303133">¥ 0.00</text>
+
+  <!-- numpad -->
+  <g font-size="16" font-weight="600" text-anchor="middle">
+    <rect x="44" y="196" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="79" y="226" fill="#303133">1</text>
+    <rect x="122" y="196" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="157" y="226" fill="#303133">2</text>
+    <rect x="200" y="196" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="235" y="226" fill="#303133">3</text>
+
+    <rect x="44" y="250" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="79" y="280" fill="#303133">4</text>
+    <rect x="122" y="250" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="157" y="280" fill="#303133">5</text>
+    <rect x="200" y="250" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="235" y="280" fill="#303133">6</text>
+
+    <rect x="44" y="304" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="79" y="334" fill="#303133">7</text>
+    <rect x="122" y="304" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="157" y="334" fill="#303133">8</text>
+    <rect x="200" y="304" width="70" height="46" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="235" y="334" fill="#303133">9</text>
+
+    <rect x="44" y="358" width="70" height="40" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="79" y="384" fill="#303133">.</text>
+    <rect x="122" y="358" width="70" height="40" rx="8" fill="#ffffff" stroke="#dcdfe6"/><text x="157" y="384" fill="#303133">0</text>
+    <rect x="200" y="358" width="70" height="40" rx="8" fill="#fef0f0"/><text x="235" y="384" fill="#f56c6c">⌫</text>
+  </g>
+
+  <!-- right panel -->
+  <rect x="290" y="76" width="258" height="322" rx="12" fill="#fafbfd" stroke="#ebeef5"/>
+  <text x="310" y="116" font-size="13" fill="#909399">选择分类 · 常用自动排前</text>
+
+  <g font-size="12" text-anchor="middle">
+    <rect x="300" y="132" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="358" y="154" font-size="20">🍜</text><text x="358" y="176" fill="#606266">餐饮</text>
+    <rect x="424" y="132" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="482" y="154" font-size="20">🚕</text><text x="482" y="176" fill="#606266">出行</text>
+
+    <rect x="300" y="194" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="358" y="216" font-size="20">🛒</text><text x="358" y="238" fill="#606266">购物</text>
+    <rect x="424" y="194" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="482" y="216" font-size="20">🏠</text><text x="482" y="238" fill="#606266">居住</text>
+
+    <rect x="300" y="256" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="358" y="278" font-size="20">🎬</text><text x="358" y="300" fill="#606266">娱乐</text>
+    <rect x="424" y="256" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="482" y="278" font-size="20">💊</text><text x="482" y="300" fill="#606266">医疗</text>
+
+    <rect x="300" y="318" width="116" height="54" rx="9" fill="#ffffff" stroke="#dcdfe6"/><text x="358" y="340" font-size="20">📱</text><text x="358" y="362" fill="#606266">数码</text>
+    <rect x="424" y="318" width="116" height="54" rx="9" fill="#f56c6c"/><text x="482" y="340" font-size="20">＋</text><text x="482" y="362" fill="#ffffff">保存</text>
+  </g>
+</svg>

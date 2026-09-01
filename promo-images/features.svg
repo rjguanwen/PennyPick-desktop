@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="416" viewBox="0 0 780 416" font-family="'Segoe UI','Microsoft YaHei','PingFang SC',sans-serif">
+  <rect width="780" height="416" fill="#f4f6fa" rx="18"/>
+  <text x="390" y="42" text-anchor="middle" font-size="21" font-weight="700" fill="#303133">一屏看懂，拾财能帮你做什么</text>
+  <text x="390" y="66" text-anchor="middle" font-size="13" fill="#909399">不堆功能，每个模块都只解决记账里的一件小事</text>
+
+  <!-- card 1 -->
+  <rect x="20" y="92" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="108" cy="136" r="24" fill="#fef0f0"/>
+  <text x="108" y="145" text-anchor="middle" font-size="24">⚡</text>
+  <text x="108" y="192" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">快速记账</text>
+  <text x="108" y="214" text-anchor="middle" font-size="12" fill="#909399">大键盘按两下就记完</text>
+
+  <!-- card 2 -->
+  <rect x="208" y="92" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="296" cy="136" r="24" fill="#f0f9eb"/>
+  <text x="296" y="145" text-anchor="middle" font-size="24">🎯</text>
+  <text x="296" y="192" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">预算预警</text>
+  <text x="296" y="214" text-anchor="middle" font-size="12" fill="#909399">花到八成及时提醒</text>
+
+  <!-- card 3 -->
+  <rect x="396" y="92" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="484" cy="136" r="24" fill="#ecf5ff"/>
+  <text x="484" y="145" text-anchor="middle" font-size="24">📊</text>
+  <text x="484" y="192" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">统计分析</text>
+  <text x="484" y="214" text-anchor="middle" font-size="12" fill="#909399">钱花哪了一目了然</text>
+
+  <!-- card 4 -->
+  <rect x="584" y="92" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="672" cy="136" r="24" fill="#fdf6ec"/>
+  <text x="672" y="145" text-anchor="middle" font-size="24">💳</text>
+  <text x="672" y="192" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">还款管理</text>
+  <text x="672" y="214" text-anchor="middle" font-size="12" fill="#909399">信用卡不再忘还</text>
+
+  <!-- card 5 -->
+  <rect x="20" y="248" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="108" cy="292" r="24" fill="#ecf5ff"/>
+  <text x="108" y="301" text-anchor="middle" font-size="24">📥</text>
+  <text x="108" y="348" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">账单导入</text>
+  <text x="108" y="370" text-anchor="middle" font-size="12" fill="#909399">微信支付宝一键迁</text>
+
+  <!-- card 6 -->
+  <rect x="208" y="248" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="296" cy="292" r="24" fill="#fdf6ec"/>
+  <text x="296" y="301" text-anchor="middle" font-size="24">📄</text>
+  <text x="296" y="348" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">收支报告</text>
+  <text x="296" y="370" text-anchor="middle" font-size="12" fill="#909399">月报年报可导出</text>
+
+  <!-- card 7 -->
+  <rect x="396" y="248" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="484" cy="292" r="24" fill="#f0f9eb"/>
+  <text x="484" y="301" text-anchor="middle" font-size="24">🔁</text>
+  <text x="484" y="348" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">固定账单</text>
+  <text x="484" y="370" text-anchor="middle" font-size="12" fill="#909399">房租房贷自动记</text>
+
+  <!-- card 8 -->
+  <rect x="584" y="248" width="176" height="140" rx="14" fill="#ffffff"/>
+  <circle cx="672" cy="292" r="24" fill="#fef0f0"/>
+  <text x="672" y="301" text-anchor="middle" font-size="24">🔒</text>
+  <text x="672" y="348" text-anchor="middle" font-size="16" font-weight="700" fill="#303133">本地加密</text>
+  <text x="672" y="370" text-anchor="middle" font-size="12" fill="#909399">数据只存你电脑</text>
+</svg>
